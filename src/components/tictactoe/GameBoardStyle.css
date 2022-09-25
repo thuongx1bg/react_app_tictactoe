@@ -1,19 +1,21 @@
 .game-board-3{
     grid-template-columns: repeat(3, 1fr);
     grid-template-rows: repeat(3, 1fr);
-    font-size: 100px;
+    font-size: 8vh;
+    /* font-size-adjust: ex-height 80; */
+    /* line-height: 100%; */
 
 }
 .game-board-5{
     grid-template-columns: repeat(5, 1fr);
     grid-template-rows: repeat(5, 1fr);
-    font-size: 50px;
+    font-size: 4.5vh;
 
 }
 
 .game-board-7{
     grid-template-columns: repeat(7, 1fr);
     grid-template-rows: repeat(7, 1fr);
-    font-size: 35px;
+    font-size: 2vh;
 
 }
