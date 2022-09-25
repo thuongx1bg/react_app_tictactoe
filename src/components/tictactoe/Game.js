@@ -42,6 +42,9 @@ const Game = (props) => {
 
     return (
         <div className="game">
+            <div className='game-text'>
+                {` Hàng ${numberToWin} ô để chiến thắng!`}
+            </div>
             <Board height={height} cells={board} onClick={handleClick}></Board>
             {winner ? (
                 <div className="notification">
