@@ -97,6 +97,7 @@
     background-image: url('/src/image/unnamed2.webp');
     background-position: center;
     height: 100vh;
+    background-size: contain;
 }
 
 #root {
