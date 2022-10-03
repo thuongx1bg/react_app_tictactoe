@@ -48,7 +48,7 @@ const Game = (props) => {
             <Board height={height} cells={board} onClick={handleClick}></Board>
             {winner ? (
                 <div className="notification">
-                    {winner ? `Winner is ${xIsNext ? 'O' : 'X'}` : 'Draw'}
+                    {winner ? `Người thắng là ${xIsNext ? 'O' : 'X'}` : 'Draw'}
                 </div>
             ) : (
                 ''
@@ -59,6 +59,15 @@ const Game = (props) => {
                 </div>
             ) : (
                 ''
+            )}
+            {!checkDraw()  && !winner && xIsNext ? (
+                <div className="notification">
+                    Lượt của X
+                </div>
+            ) : (
+                <div className="notification">
+                    Lượt của O
+                </div>
             )}
             <div>
 

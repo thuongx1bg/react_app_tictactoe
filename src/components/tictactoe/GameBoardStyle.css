@@ -2,8 +2,6 @@
     grid-template-columns: repeat(3, 1fr);
     grid-template-rows: repeat(3, 1fr);
     font-size: 8vh;
-    /* font-size-adjust: ex-height 80; */
-    /* line-height: 100%; */
 
 }
 .game-board-5{
