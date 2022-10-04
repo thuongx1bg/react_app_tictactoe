@@ -1,37 +1,60 @@
-import React, { useState } from 'react';
+import React, { useReducer, useState } from 'react';
 import Board from './Board';
 import { calculateWinner } from '../../helpers';
 import './GameStyle.css';
-import { useNavigate } from "react-router-dom";
+import {  useNavigate } from "react-router-dom";
+
 const Game = (props) => {
     const height = props.height;
     const numberToWin = props.numberToWin;
-    const [board, setBoard] = useState(new Array(height).fill(new Array(height).fill(null)));
-    const [xIsNext, setXIsNext] = useState(true);
-    const [winner, setWinner] = useState('');
+    const initialState = {
+        board: new Array(height).fill(new Array(height).fill(null)),
+        xIsNext: true,
+        winner: ''
+    };
+    const gameReducer = (state, action) => {
+        switch (action.type) {
+            case "handleClick":
+                {
+                    const nextState = JSON.parse(JSON.stringify(state));
+                    const { indexRow, indexColumn } = action.payload;
+                    const { board, xIsNext, winner } = state;
+                    if (!winner && !board[indexRow][indexColumn]) {
+                        nextState.board[indexRow][indexColumn] = xIsNext ? 'X' : 'O';
+                        var winners = calculateWinner(nextState.board, height, numberToWin, indexRow, indexColumn);
+                        nextState.xIsNext = !xIsNext;
+                        nextState.winner = winners;
+                    };
+                    return nextState;
+                }
+            case "reset":
+                {
+                    const nextState = JSON.parse(JSON.stringify(initialState));
+                    return nextState;
+                }
+
+            default:
+                break;
+        }
+        return state;
+    }
+    const [state, dispatch] = useReducer(gameReducer, initialState);
     var navigate = useNavigate();
 
     function handleClick(indexRow, indexColumn) {
-        if (!winner && !board[indexRow][indexColumn]) {
-            const boardCopy = board.map(row => [...row]);
-            boardCopy[indexRow][indexColumn] = xIsNext ? 'X' : 'O';
-            var winners = calculateWinner(boardCopy, height, numberToWin, indexRow, indexColumn);
-            setWinner(winners);
-            setBoard(boardCopy);
-            setXIsNext((xIsNext) => !xIsNext);
-
-        }
+        dispatch({
+            type: "handleClick", payload: {
+                indexRow, indexColumn
+            }
+        });
     }
-
     const handleReset = () => {
-        setBoard(Array(height).fill(Array(height).fill(null)));
-        setXIsNext(true);
-        setWinner('');
+        dispatch({ type: "reset" })
     };
     const checkDraw = () => {
-        for (let row = 0; row < board.length; row++) {
-            for (let column = 0; column < board.length; column++) {
-                if(board[row][column]=== null){
+        for (let row = 0; row < state.board.length; row++) {
+            for (let column = 0; column < state.board.length; column++) {
+                if(state.board[row][column]=== null){
                     return false;
                 }   
             }   
@@ -40,27 +63,28 @@ const Game = (props) => {
     }
 
 
+
     return (
         <div className="game">
             <div className='game-text'>
                 {` Hàng ${numberToWin} ô để chiến thắng!`}
             </div>
-            <Board height={height} cells={board} onClick={handleClick}></Board>
-            {winner ? (
+            <Board height={height} cells={state.board} onClick={handleClick}></Board>
+            {state.winner ? (
                 <div className="notification">
-                    {winner ? `Người thắng là ${xIsNext ? 'O' : 'X'}` : 'Draw'}
+                    {state.winner ? `Người thắng là ${state.xIsNext ? 'O' : 'X'}` : 'Draw'}
                 </div>
             ) : (
                 ''
             )}
-            {checkDraw()  && !winner ? (
+            {checkDraw() && !state.winner ? (
                 <div className="notification">
                     Draw
                 </div>
             ) : (
                 ''
             )}
-            {!checkDraw()  && !winner && xIsNext ? (
+            {!checkDraw() && !state.winner && state.xIsNext ? (
                 <div className="notification">
                     Lượt của X
                 </div>
